@@ -1,0 +1,11 @@
+opencv-python
+numpy
+pillow
+tensorflow
+google-generativeai
+matplotlib
+scikit-image
+streamlit
+streamlit-option-menu
+streamlit-lottie
+python-dotenv
