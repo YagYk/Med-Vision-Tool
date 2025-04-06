@@ -92,6 +92,40 @@ def main():
                 "no_history": "कोई पिछला रिकॉर्ड नहीं मिला",
                 "new_analysis": "नया विश्लेषण",
                 "previous_analyses": "पिछले विश्लेषण"
+            },
+            "ta": {
+                "title": "மருத்துவ பார்வை நோயறிதல் கருவி",
+                "subtitle": "ஏஐ-ஆதாரமான மருத்துவ படக்காட்சிகள் பகுப்பாய்வு",
+                "upload_text": "மருத்துவப் படம் பதிவேற்றவும்",
+                "patient_info": "நோயாளியின் தகவல்கள்",
+                "name": "நோயாளியின் பெயர்",
+                "age": "வயது",
+                "gender": "பாலினம்",
+                "village": "கிராமம்",
+                "district": "மாவட்டம்",
+                "state": "மாநிலம்",
+                "analyze": "படத்தை பகுப்பாய்வு செய்யவும்",
+                "save_report": "அறிக்கையை சேமிக்கவும்",
+                "loading": "படத்தை பகுப்பாய்வு செய்கிறது...",
+                "error": "பிழை",
+                "success": "வெற்றி",
+                "report_saved": "அறிக்கை வெற்றிகரமாக சேமிக்கப்பட்டது!",
+                "select_language": "மொழியைத் தேர்ந்தெடுக்கவும்",
+                "gender_options": ["ஆண்", "பெண்", "மற்றவை"],
+                "analysis_results": "பகுப்பாய்வு முடிவுகள்",
+                "recommendations": "பரிந்துரைகள்",
+                "medical_advice": "மருத்துவ ஆலோசனை",
+            "contact_doctor": "விரிவான பரிசோதனைக்கு மருத்துவரை அணுகவும்",
+            "emergency_contact": "அவசர தொடர்பு",
+            "phone": "தொலைபேசி எண்",
+            "address": "முகவரி",
+            "save_patient": "நோயாளியின் தகவல்களை சேமிக்கவும்",
+            "clear": "படிவத்தை அழிக்கவும்",
+            "upload_help": "ஆதரிக்கப்படும் வடிவங்கள்: JPG, JPEG, PNG, BMP",
+            "patient_history": "நோயாளியின் வரலாறு",
+            "no_history": "முந்தைய பதிவுகள் கிடைக்கவில்லை",
+            "new_analysis": "புதிய பகுப்பாய்வு",
+            "previous_analyses": "முந்தைய பகுப்பாய்வுகள்"
             }
         }
         return translations
@@ -111,8 +145,14 @@ def main():
     # Sidebar
     with st.sidebar:
         st.title(t["select_language"])
-        language = st.radio("", ["English", "हिंदी"], index=0 if st.session_state.language == 'en' else 1)
-        st.session_state.language = 'en' if language == "English" else 'hi'
+        language = st.radio("", ["English", "हिंदी", "தமிழ்"], 
+                            index=0 if st.session_state.language == 'en' else 1 if st.session_state.language == 'hi' else 2)
+        if language == "English":
+            st.session_state.language = 'en'
+        elif language == "हिंदी":
+            st.session_state.language = 'hi'
+        else:
+            st.session_state.language = 'ta'
         t = translations[st.session_state.language]
 
     # Main content
@@ -168,7 +208,8 @@ def main():
                         # Process image
                         preprocessed = preprocess_image(temp_path)
                         cv_results = classifier.detect_anomalies(preprocessed)
-                        genai_results = genai_helper.analyze_medical_image(temp_path, cv_results)
+                        genai_results = genai_helper.analyze_medical_image(temp_path, cv_results, language=st.session_state.language)
+
                         
                         # Generate report
                         report = generate_report(temp_path, cv_results, genai_results)
