@@ -7,11 +7,11 @@ class ImageClassifier:
         # If model_path is None, use a pre-trained model
         if model_path is None:
             # Use a lightweight model suitable for portable applications
-            self.model = tf.keras.applications.MobileNetV2(
+            self.model = tf.keras.applications.EfficientNetB0(
                 input_shape=(224, 224, 3),
                 include_top=True,
                 weights='imagenet'
-            )
+                )
             # For real application, you would fine-tune this on medical data
         else:
             self.model = tf.keras.models.load_model(model_path)
